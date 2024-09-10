@@ -30,6 +30,7 @@ az container create \
 --registry-login-server $ACR_NAME.azurecr.io \
 --ports 5000 \
 --ip-address Public \
+--dns-name-label $CONTAINER_NAME \
 --location $LOCATION \
 --registry-username $ADMIN_USERNAME \
 --registry-password $ADMIN_PASSWORD

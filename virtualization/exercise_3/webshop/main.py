@@ -50,7 +50,7 @@ def show_cart():
 def checkout():
     cart = session.get('cart', [])
     headers = {'X-API-Key': api_key}
-    response = requests.post("myorderservice.westus.azurecontainer.io", json=cart, headers=headers)
+    response = requests.post("hkr-order-service-gtc.switzerlandnorth.azurecontainer.io", json=cart, headers=headers)
     if response.status_code == 200:
         session['cart'] = []
     return redirect(url_for('show_cart'))
