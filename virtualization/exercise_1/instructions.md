@@ -1,7 +1,7 @@
 ## Step 1: Set Up the Environment (5 minutes)
 
 1. Open a Terminal.
-2. Navigate to the directory where your Flask application (virtualization/webshop) is located.
+2. Navigate to the directory where the Flask application (virtualization/webshop) is located.
 3. If necessary, install the virtual environment module: `sudo apt-get install python3-venv`.
 4. Create a new Python virtual environment: `python3 -m venv myenv`.
 5. Activate the virtual environment: `source myenv/bin/activate`.
