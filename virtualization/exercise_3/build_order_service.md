@@ -40,7 +40,23 @@ az container show \
 --name $CONTAINER_NAME \
 --output table
 
+az container show \
+--resource-group $RESOURCE_GROUP \
+--name $CONTAINER_NAME \
+--query ipAddress.fqdn \
+--output table
 
+
+az container logs \
+--name $CONTAINER_NAME \
+--resource-group $RESOURCE_GROUP
+
+
+az container show \
+--name $CONTAINER_NAME \
+--resource-group $RESOURCE_GROUP \
+--query 'instanceView.events[].[timestamp,message]' \
+--out table
 
 
 az container delete \

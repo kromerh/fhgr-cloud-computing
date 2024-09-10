@@ -5,7 +5,7 @@ from azure.storage.queue import QueueServiceClient
 
 app = Flask(__name__)
 
-key_vault_name = 'stqhkr'
+key_vault_name = 'hkr-kv-gtc'
 key_vault_uri = f"https://{key_vault_name}.vault.azure.net"
 
 credential = DefaultAzureCredential()
