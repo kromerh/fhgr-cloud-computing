@@ -33,7 +33,23 @@ az container create \
 --dns-name-label $CONTAINER_NAME \
 --location $LOCATION \
 --registry-username $ADMIN_USERNAME \
---registry-password $ADMIN_PASSWORD
+--registry-password $ADMIN_PASSWORD \
+--cpu 1 \
+--memory 0.5 \
+--assign-identity
+
+az container show \
+--resource-group $RESOURCE_GROUP \
+--name $CONTAINER_NAME \
+--query identity.principalId \
+--out table
+
+export MI_PRINCIPAL_ID=78edfe0b-f6aa-44ba-a2d9-1025d13511c0
+
+az role assignment create \
+--role "Key Vault Secrets User" \
+--assignee $MI_PRINCIPAL_ID \
+--scope /subscriptions/43afd889-f8ff-47b6-926b-dda4b74fee95/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/hkr-kv-gtc
 
 
 az container show \

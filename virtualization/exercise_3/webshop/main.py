@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 app = Flask(__name__)
 app.secret_key = 'a4d2a7a679c84dd792a5f5d6dd7a5792'
 
-key_vault_name = 'stqhkr'
+key_vault_name = 'hkr-kv-gtc'
 key_vault_uri = f"https://{key_vault_name}.vault.azure.net"
 
 credential = DefaultAzureCredential()
@@ -56,11 +56,13 @@ def show_cart():
 @app.route('/checkout', methods=['POST'])
 def checkout():
     cart = session.get('cart', [])
+    cart = [{'id': item['id'], 'name': item['name'], 'price': item['price']} for item in cart]
     headers = {'X-API-Key': api_key}
-    response = requests.post("hkr-order-service-gtc.switzerlandnorth.azurecontainer.io", json=cart, headers=headers)
+    response = requests.post("http://hkr-order-service-gtc.switzerlandnorth.azurecontainer.io:5000/order", json=cart, headers=headers)
+    logging.info('Sent request')
     if response.status_code == 200:
         session['cart'] = []
-        logging.info('Checkout successful, cleared cart')
+        logging.info('Checkout successful')
     else:
         logging.error('Checkout failed with status code: %d', response.status_code)
     return redirect(url_for('show_cart'))
