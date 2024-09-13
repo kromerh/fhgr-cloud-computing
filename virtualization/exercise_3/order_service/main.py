@@ -18,7 +18,7 @@ logger.addHandler(handler)
 
 app = Flask(__name__)
 
-key_vault_name = 'hkr-kv-gtc'
+key_vault_name = 'hkr-kv-webshop'
 key_vault_uri = f"https://{key_vault_name}.vault.azure.net"
 logger.info(f'Accessed Key Vault URI: {key_vault_uri}')
 
@@ -31,10 +31,10 @@ logger.info('Read API Key from key vault.')
 storage_account_key = client.get_secret('storage-account-key').value
 logger.info('Read storage account key from key vault.')
 
-queue_service_client = QueueServiceClient(account_url="https://stacchkrgtc.queue.core.windows.net",
+queue_service_client = QueueServiceClient(account_url="https://staccwebshophkr.queue.core.windows.net",
                                           credential=storage_account_key)
 
-queue_client = queue_service_client.get_queue_client("stqhkr")
+queue_client = queue_service_client.get_queue_client("hkrqueue")
 logger.info('Connected to Azure Queue Service.')
 
 @app.route('/order', methods=['POST'])
