@@ -1,63 +1,65 @@
-https://learn.microsoft.com/en-us/cli/azure/containerapp?view=azure-cli-latest
-
+# ----- Step 2 -------
+# Azure Resources
+export SUBSCRIPTION_ID=b641ad8e-de23-40d6-8662-ec920f7cb0b9
 export RESOURCE_GROUP=hkr-virtualisierung-webshop
 export LOCATION=switzerlandnorth
+export STORAGE_ACCOUNT_NAME=staccwebshophkr
+export QUEUE_NAME=hkrqueue
+export KEY_VAULT_NAME=hkr-kv-webshop
+
+# Azure Container Registry
 export ACR_NAME=hkracrwebshop
 export IMAGE=order_service:v1
+export API_NAME=order-service
 
+# Azure Container App
+export ENVIRONMENT=webshop-env
+export API_KEY=v0Fiejnh3MfmYlWz9OYN6wf5aBPrR2z3fpdpkMUsU9ZzFWinLBqXv1AixbqHdDriaEKkTURuxHD0x5mx0dBo8kcUxzMKSL2mnxnMKguY0qxugpdPy4b5p0pMg1RM24Ri
+
+# Do not modify the following variables
+export API_KEY_NAME=api-key
+export SECRET_NAME=storage-account-key
+
+# ----- Step 3 -------
 az group create --name $RESOURCE_GROUP --location $LOCATION
 
 az acr create --resource-group $RESOURCE_GROUP --name $ACR_NAME --sku Standard
 
 az acr update -n $ACR_NAME --admin-enabled true
 
-<!-- # Get the login server name -->
+# Run these four lines at the same time
 ACR_LOGIN_SERVER=$(az acr show --name $ACR_NAME --query loginServer --output tsv)
-
-<!-- # Get the username and password -->
 ACR_USERNAME=$(az acr credential show --name $ACR_NAME --query username --output tsv)
 ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query "passwords[0].value" --output tsv)
-
-<!-- # Use Docker to log in -->
 docker login $ACR_LOGIN_SERVER --username $ACR_USERNAME --password $ACR_PASSWORD
 
-<!-- # Create a new builder instance and use it -->
 docker buildx create --use
 
-<!-- # Build the Docker image for linux/amd64 and push it to ACR -->
 docker buildx build --platform linux/amd64 -t $ACR_LOGIN_SERVER/$IMAGE . --push
 
-export API_NAME=order-service
-export ENVIRONMENT=webshop-env
-export KEY_VAULT_NAME=hkr-kv-webshop
-
+# Key Vault
 az keyvault create --name $KEY_VAULT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION
 
-<!-- Im Key Vault die Secrets eintragen -->
-export STORAGE_ACCOUNT_NAME=staccwebshophkr
-export SECRET_NAME=storage-account-key
-export API_KEY_NAME=api-key
-export API_KEY=v0Fiejnh3MfmYlWz9OYN6wf5aBPrR2z3fpdpkMUsU9ZzFWinLBqXv1AixbqHdDriaEKkTURuxHD0x5mx0dBo8kcUxzMKSL2mnxnMKguY0qxugpdPy4b5p0pMg1RM24Ri
-export QUEUE_NAME=hkrqueue
-export SUBSCRIPTION_ID=b641ad8e-de23-40d6-8662-ec920f7cb0b9
-
+# Storage Account and Queue
 az storage account create --name $STORAGE_ACCOUNT_NAME --resource-group $RESOURCE_GROUP --location $LOCATION --sku Standard_LRS
-STORAGE_KEY=$(az storage account keys list --account-name $STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
+export STORAGE_KEY=$(az storage account keys list --account-name $STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
 az storage queue create --name $QUEUE_NAME --account-name $STORAGE_ACCOUNT_NAME --account-key $STORAGE_KEY
 
+# Put Secrets in Key Vault
 export USER_ID=$(az ad signed-in-user show --query id -o tsv)
 az role assignment create --role "Key Vault Secrets Officer" --assignee $USER_ID --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEY_VAULT_NAME
 
 az keyvault secret set --name $SECRET_NAME --value $STORAGE_KEY --vault-name $KEY_VAULT_NAME
-
 az keyvault secret set --name $API_KEY_NAME --value $API_KEY --vault-name $KEY_VAULT_NAME
 
+# Azure Container App environment
 az containerapp env create \
 --name $ENVIRONMENT \
 --resource-group $RESOURCE_GROUP \
 --location "$LOCATION" \
 --logs-destination none
 
+# Azure Container App
 az containerapp create \
 --name $API_NAME \
 --resource-group $RESOURCE_GROUP \
@@ -83,11 +85,7 @@ az role assignment create \
 --assignee $MI_PRINCIPAL_ID \
 --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEY_VAULT_NAME
 
-
-
-
-
-
-2. Scaling?
-3. What to do with TF?
-
+curl -X POST -H 'X-API-Key: v0Fiejnh3MfmYlWz9OYN6wf5aBPrR2z3fpdpkMUsU9ZzFWinLBqXv1AixbqHdDriaEKkTURuxHD0x5mx0dBo8kcUxzMKSL2mnxnMKguY0qxugpdPy4b5p0pMg1RM24Ri' -H 'Content-Type: application/json' -d '{
+"item": "books",
+"quantity": 200
+}' https://order-service.niceisland-afde8836.switzerlandnorth.azurecontainerapps.io/order
