@@ -1,3 +1,5 @@
+https://learn.microsoft.com/en-us/cli/azure/containerapp?view=azure-cli-latest
+
 export RESOURCE_GROUP=hkr-virtualisierung-webshop
 export LOCATION=switzerlandnorth
 export ACR_NAME=hkracrwebshop
@@ -65,6 +67,8 @@ az containerapp create \
 --ingress external \
 --registry-server $ACR_NAME.azurecr.io \
 --system-assigned \
+--min-replicas 0 \
+--max-replicas 1 \
 --query properties.configuration.ingress.fqdn
 
 
@@ -84,5 +88,6 @@ az role assignment create \
 
 
 
-1. What is Container Environment?
 2. Scaling?
+3. What to do with TF?
+

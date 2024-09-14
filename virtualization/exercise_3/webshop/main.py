@@ -4,12 +4,15 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 import logging
 
+KET_VAULT_NAME = 'hkr-kv-webshop'
+ORDER_SERVICE_FQDN =  'https://hkr-order-service-gtc.switzerlandnorth.azurecontainer.io'
+
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.secret_key = 'a4d2a7a679c84dd792a5f5d6dd7a5792'
 
-key_vault_name = 'hkr-kv-gtc'
+key_vault_name = KET_VAULT_NAME
 key_vault_uri = f"https://{key_vault_name}.vault.azure.net"
 
 credential = DefaultAzureCredential()
@@ -58,7 +61,7 @@ def checkout():
     cart = session.get('cart', [])
     cart = [{'id': item['id'], 'name': item['name'], 'price': item['price']} for item in cart]
     headers = {'X-API-Key': api_key}
-    response = requests.post("http://hkr-order-service-gtc.switzerlandnorth.azurecontainer.io:5000/order", json=cart, headers=headers)
+    response = requests.post(f"{ORDER_SERVICE_FQDN}/order", json=cart, headers=headers)
     logging.info('Sent request')
     if response.status_code == 200:
         session['cart'] = []
