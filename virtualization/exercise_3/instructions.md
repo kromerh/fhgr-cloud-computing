@@ -59,7 +59,7 @@ With `docker login $ACR_LOGIN_SERVER --username $ACR_USERNAME --password $ACR_PA
 In this step, you will modify the `webshop/main.py` file to include the required constants.
 
 1. Open webshop/main.py in VS Code.
-2. Assign values to the constants `KEY_VAULT_NAME` and `ORDER_SERVICE_FQDN` which is the fully qualified domain name of the order_service Container App.
+2. Assign values to the constants `KEY_VAULT_NAME` and `ORDER_SERVICE_FQDN` which is the service name of the order_service (http://order-service). 
 
 ## Step 2: Assign the required environment variables (5 minutes)
 
