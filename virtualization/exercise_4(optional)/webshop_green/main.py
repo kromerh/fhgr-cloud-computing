@@ -5,7 +5,7 @@ from azure.keyvault.secrets import SecretClient
 import logging
 
 KEY_VAULT_NAME = 'hkr-kv-webshop'
-ORDER_SERVICE_FQDN =  'http://order-service'
+ORDER_SERVICE_FQDN =  'https://order-service.yellowsmoke-0b140faa.switzerlandnorth.azurecontainerapps.io'
 
 logging.basicConfig(level=logging.INFO)
 
