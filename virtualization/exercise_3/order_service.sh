@@ -69,7 +69,7 @@ az containerapp create \
 --ingress external \
 --registry-server $ACR_NAME.azurecr.io \
 --system-assigned \
---min-replicas 0 \
+--min-replicas 1 \
 --max-replicas 1 \
 --query properties.configuration.ingress.fqdn
 
