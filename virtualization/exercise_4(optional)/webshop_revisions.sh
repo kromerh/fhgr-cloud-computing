@@ -4,7 +4,7 @@
 export SUBSCRIPTION_ID=b641ad8e-de23-40d6-8662-ec920f7cb0b9
 export RESOURCE_GROUP=hkr-virtualisierung-webshop
 export LOCATION=switzerlandnorth
-export KEY_VAULT_NAME=hkr-kv-webshop
+export KEY_VAULT_NAME=hkr-kv-webshop-2
 export ENVIRONMENT=webshop-env
 export ACR_NAME=hkracrwebshop
 

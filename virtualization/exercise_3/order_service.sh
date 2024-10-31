@@ -1,11 +1,11 @@
 # ----- Step 2 -------
 # Azure Resources
-export SUBSCRIPTION_ID=b641ad8e-de23-40d6-8662-ec920f7cb0b9
+export SUBSCRIPTION_ID=6795c425-c0c3-438c-b25f-6757acc7f034
 export RESOURCE_GROUP=hkr-virtualisierung-webshop
 export LOCATION=switzerlandnorth
 export STORAGE_ACCOUNT_NAME=staccwebshophkr
 export QUEUE_NAME=hkrqueue
-export KEY_VAULT_NAME=hkr-kv-webshop
+export KEY_VAULT_NAME=hkr-kv-webshop-2
 
 # Azure Container Registry
 export ACR_NAME=hkracrwebshop
@@ -85,7 +85,15 @@ az role assignment create \
 --assignee $MI_PRINCIPAL_ID \
 --scope /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$KEY_VAULT_NAME
 
+
+
+
+az containerapp update \
+--name $API_NAME \
+--resource-group $RESOURCE_GROUP \
+--image $ACR_NAME.azurecr.io/$IMAGE
+
 curl -X POST -H 'X-API-Key: v0Fiejnh3MfmYlWz9OYN6wf5aBPrR2z3fpdpkMUsU9ZzFWinLBqXv1AixbqHdDriaEKkTURuxHD0x5mx0dBo8kcUxzMKSL2mnxnMKguY0qxugpdPy4b5p0pMg1RM24Ri' -H 'Content-Type: application/json' -d '{
 "item": "books",
 "quantity": 200
-}' https://order-service.niceisland-afde8836.switzerlandnorth.azurecontainerapps.io/order
+}' https://order-service.salmonmushroom-f41febe9.switzerlandnorth.azurecontainerapps.io/order
