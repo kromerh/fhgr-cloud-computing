@@ -5,7 +5,7 @@
 1. Log in to the Azure portal.
 2. In the left-hand menu, click on **Virtual machines**.
 3. Click on **Add** to create a new virtual machine.
-4. Fill in the required information (Subscription, Resource group, Virtual machine name, Region, etc.).
+4. Fill in the required information (Subscription, Resource group, Virtual machine name, Region, etc.). REgion West Europe, AZ 3, Standard_B2s.
 5. For the **Authentication type**, choose **SSH public key**.
 6. Click on **Review + create**, then on **Create**.
 7. Review that the VM was created in the Azure Portal.

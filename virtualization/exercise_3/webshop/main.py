@@ -4,7 +4,7 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 import logging
 
-KEY_VAULT_NAME = 'hkr-kv-webshop'
+KEY_VAULT_NAME = 'hkr-kv-webshop-2'
 ORDER_SERVICE_FQDN =  'http://order-service'
 
 logging.basicConfig(level=logging.INFO)
