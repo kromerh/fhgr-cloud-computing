@@ -1,6 +1,6 @@
-**Exercise: Deploying Infrastructure with Terraform and GitHub Actions (30 minutes)**
+**Exercise: Deploying Infrastructure with Terraform and GitHub Actions (60-90 minutes)**
 
-**Step 1: Configure GitHub Repository Secrets (10 minutes)**
+**Step 1: Configure GitHub Repository Secrets (15 minutes)**
 
 1. Go to your GitHub repository and open the 'Settings' tab.
 
@@ -8,7 +8,7 @@
 
 3. Add the 'tenant ID', 'client ID', and 'client secret' from your service principal as new secrets, for example, as 'AZURE_TENANT_ID', 'AZURE_CLIENT_ID', and 'AZURE_CLIENT_SECRET'. Also add your Azure Subscription ID - 'AZURE_SUBSCRIPTION_ID' - as a secret. You find these values in the Azure portal or by running `az account show` in the Azure CLI.
 
-**Step 2: Create GitHub Action for 'terraform plan' and 'terraform apply' (20 minutes)**
+**Step 2: Create GitHub Action for 'terraform plan' and 'terraform apply' (45-75 minutes)**
 
 1. Create a new file under '.github/workflows' in your repository for your GitHub Action (e.g., 'tf_plan.yml').
 

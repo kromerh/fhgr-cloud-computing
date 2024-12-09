@@ -15,7 +15,7 @@
 1. Open your Terminal.
 2. Navigate to the directory where your `.pem` file is located.
 3. Set the correct permissions on the `.pem` file by running: `chmod 400 yourfile.pem`.
-4. Use the SSH command to connect to your VM: `ssh -i yourfile.pem yourusername@yourvmip`. The standard user name if you have not changed it is `azureuser`.
+4. Use the SSH command to connect to your VM: `ssh -i vm-06-ex2_key.pem azureuser@172.201.251.121`. The standard user name if you have not changed it is `azureuser`.
 
 ## Step 3: Setting up the Environment (12 minutes)
 
@@ -31,7 +31,7 @@
 ## Step 1: Upload Your Application (10 minutes)
 
 1. On your local machine, navigate to the directory where your web app zip file is located (webshop.zip).
-2. Use the `scp` command to copy the file to your VM: `scp -i yourfile.pem webshop.zip yourusername@yourvmip:~`.
+2. Use the `scp` command to copy the file to your VM: `scp -i vm-06-ex2_key.pem webshop.zip azureuser@172.201.251.121:~`.
 3. SSH back into your VM.
 4. Unzip the file: `unzip webshop.zip`. You might need to install unzip. If so, run `sudo apt-get install unzip`.
 5. Navigate into the unzipped directory: `cd webshop`.

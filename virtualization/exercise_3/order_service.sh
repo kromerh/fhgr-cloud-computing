@@ -1,14 +1,14 @@
 # ----- Step 2 -------
 # Azure Resources
 export SUBSCRIPTION_ID=6795c425-c0c3-438c-b25f-6757acc7f034
-export RESOURCE_GROUP=hkr-virtualisierung-webshop
+export RESOURCE_GROUP=rg-virtualisierung-webshop-hkr
 export LOCATION=switzerlandnorth
-export STORAGE_ACCOUNT_NAME=staccwebshophkr
-export QUEUE_NAME=hkrqueue
-export KEY_VAULT_NAME=hkr-kv-webshop-2
+export STORAGE_ACCOUNT_NAME=staccwebshopvl06hkr
+export QUEUE_NAME=queuehkr
+export KEY_VAULT_NAME=kv-webshop-hkr
 
 # Azure Container Registry
-export ACR_NAME=hkracrwebshop
+export ACR_NAME=acrwebshophkr
 export IMAGE=order_service:v1
 export API_NAME=order-service
 
@@ -56,7 +56,7 @@ az keyvault secret set --name $API_KEY_NAME --value $API_KEY --vault-name $KEY_V
 az containerapp env create \
 --name $ENVIRONMENT \
 --resource-group $RESOURCE_GROUP \
---location "$LOCATION" \
+--location "$LOATION" \
 --logs-destination none
 
 # Azure Container App
@@ -93,7 +93,7 @@ az containerapp update \
 --resource-group $RESOURCE_GROUP \
 --image $ACR_NAME.azurecr.io/$IMAGE
 
-curl -X POST -H 'X-API-Key: v0Fiejnh3MfmYlWz9OYN6wf5aBPrR2z3fpdpkMUsU9ZzFWinLBqXv1AixbqHdDriaEKkTURuxHD0x5mx0dBo8kcUxzMKSL2mnxnMKguY0qxugpdPy4b5p0pMg1RM24Ri' -H 'Content-Type: application/json' -d '{
+curl -X POST -H 'X-API-Key: heiko' -H 'Content-Type: application/json' -d '{
 "item": "books",
-"quantity": 200
+"quantity": 999
 }' https://order-service.salmonmushroom-f41febe9.switzerlandnorth.azurecontainerapps.io/order

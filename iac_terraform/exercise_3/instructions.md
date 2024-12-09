@@ -1,105 +1,43 @@
-**Exercise: Introduction to GitHub Actions (60 minutes)**
+**Exercise: Working with Azure, Terraform and Service Principal (30 minutes)**
 
-**Part 1: Creating a GitHub Action to Run a Bash Command (30 minutes)**
 
-**Step 1: Clone your Repository (5 minutes)**
+**Step 1: Creating a Service Principal with the CLI (15 minutes)**
 
-1. Clone the repository from Exercise 1 to your local machine. If you have not set one up, create a new repository on GitHub.
+1. In the command prompt or terminal, run the following command to create a new Service Principal:
 
-**Step 2: Creating a GitHub Action (10 minutes)**
-
-1. On GitHub, navigate to your repository and click on the `Actions` tab.
-2. Click on `set up a workflow yourself`.
-3. Replace the contents of the workflow file with the following:
-
-    ```yaml
-    name: Hello World Bash Workflow
-
-    on: [push]
-
-    jobs:
-      build:
-        runs-on: ubuntu-latest
-
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-
-        - name: Run a bash command
-          run: echo Hello, world!
+    ```bash
+    az ad sp create-for-rbac --name ServicePrincipalName
     ```
 
-- `name: Hello World Bash Workflow` - This is the name of your workflow. It will appear on the Actions tab of your GitHub repository.
-- `on: [push]` - This tells GitHub to run the workflow whenever there's a push event to your repository. A push event occurs whenever you upload or change files in your repository.
-- `jobs:` - Workflows consist of one or more jobs. Jobs run in parallel by default.
-- `build:` - This is the identifier you're assigning to your job. You can choose any word you like.
-- `runs-on: ubuntu-latest` - This specifies the type of runner that the job will run on. In this case, it is going to run on the latest Ubuntu virtual environment.
-- `steps:` - Steps are a sequence of tasks that will be executed within a job. Each step in a job executes on the same runner, allowing the steps to share data with each other.
-- `- name: Checkout code` - This is the first step in this job. The `name` field is optional and provides a description for the step in the GitHub UI.
-- `uses: actions/checkout@v2` - This step uses the `checkout` action at version 2. This action checks-out your repository under `$GITHUB_WORKSPACE`, so your workflow can access it.
-- `- name: Run a bash command` - This is the second step in this job. It's given the descriptive name "Run a bash command".
-- `run: echo Hello, world!` - This step runs the given bash command, which in this case is `echo Hello, world!`. The `echo` command in bash will print its arguments to the standard output, which in this case is the text "Hello, world!".
+    Replace `ServicePrincipalName` with a suitable name for your Service Principal.
 
-4. Click on `Start commit`, then `Commit new file` to create the workflow.
+2. Make a note of the `appId`, `password`, and `tenant` values in the output. These will be needed later.
 
-**Step 3: Running the Workflow (15 minutes)**
+**Step 2: Setting Up Environment Variables (10 minutes)**
 
-1. Make a small change to any file in your repository, commit it, and push it to GitHub. This will trigger the Github Action.
-2. Go to the `Actions` tab in your repository on GitHub.
-3. You should see your workflow running.
-4. Click on the workflow run to see the details.
-5. You should see "Hello, world!" printed from the bash command.
+1. Based on your operating system, set the following environment variables using the values obtained in the previous step:
 
-**Part 2: Creating a GitHub Action to Run a Python Script (30 minutes)**
+    ```bash
+    # Linux or MacOS
+    export ARM_CLIENT_ID=<Your-App-Id>
+    export ARM_CLIENT_SECRET=<Your-Client-Secret>
+    export ARM_TENANT_ID=<Your-Tenant-Id>
+    export ARM_SUBSCRIPTION_ID=<Your-Subscription-Id>
 
-**Step 1: Creating a Python Script (10 minutes)**
-
-1. In your local repository, create a new file called `hello.py`.
-2. Open `hello.py` in your text editor and add the following code:
-
-    ```python
-    print("Hello World from Python!")
+    # Windows
+    setx ARM_CLIENT_ID "<Your-App-Id>"
+    setx ARM_CLIENT_SECRET "<Your-Client-Secret>"
+    setx ARM_TENANT_ID "<Your-Tenant-Id>"
+    setx ARM_SUBSCRIPTION_ID "<Your-Subscription-Id>"
     ```
 
-3. Save and close the file.
-4. Commit the file to your repository and push it to GitHub.
+    Replace `<Your-App-Id>`, `<Your-Client-Secret>`, `<Your-Tenant-Id>`, and `<Your-Subscription-Id>` with your actual values.
 
-**Step 2: Creating a GitHub Action (20 minutes)**
+**Step 3: Deploying Infrastructure (5 minutes)**
 
-1. On GitHub, navigate to your repository and click on the `Actions` tab.
-2. Click on `New workflow`.
-3. Click on `set up a workflow yourself`.
-4. Replace the contents of the workflow file with the following:
+1. In your terminal or command prompt, navigate to the directory containing the `main.tf` file (e.g., from the previous exercise).
+2. Run `terraform init` to initialize your Terraform configuration.
+3. Run `terraform plan` to see the changes that will be made. Review these changes.
+4. Finally, run `terraform apply` to deploy your infrastructure. Confirm the deployment when prompted.
 
-    ```yaml
-    name: Hello World Python Workflow
-
-    on: [push]
-
-    jobs:
-      build:
-        runs-on: ubuntu-latest
-
-        steps:
-        - name: Checkout code
-          uses: actions/checkout@v2
-
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: '3.x'
-
-        - name: Run a Python script
-          run: |
-            python hello.py
-    ```
-
-5. Click on `Start commit`, then `Commit new file` to create the workflow.
-
-**Step 3: Running the Workflow (10 minutes)**
-
-1. Make a small change to `hello.py`, commit it, and push it to GitHub.
-2. Go to the `Actions` tab in your repository on GitHub.
-3. You should see your new Python workflow running.
-4. Click on the workflow run to see the details.
-5. You should see "Hello World from Python!" printed from the Python script.
+By the end of this exercise, you should have a basic understanding of how to use an Azure Service Principal to deploy Infrastructure as Code with Terraform.
