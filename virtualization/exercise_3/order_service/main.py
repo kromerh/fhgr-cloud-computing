@@ -5,9 +5,9 @@ from azure.storage.queue import QueueServiceClient
 import logging
 import sys
 
-KET_VAULT_NAME = "hkr-kv-webshop-2"
-STORAGE_ACCOUNT_NAME = "staccwebshophkr"
-QUEUE_NAME = "hkrqueue"
+KET_VAULT_NAME = "kv-webshop-hkr"
+STORAGE_ACCOUNT_NAME = "staccwebshopvl06hkr"
+QUEUE_NAME = "queuehkr"
 
 logger = logging.getLogger("order_service")
 logger.setLevel(logging.DEBUG)

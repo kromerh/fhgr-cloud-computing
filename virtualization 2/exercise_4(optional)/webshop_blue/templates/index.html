@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Graubünden Food Specialties</h1>
+    {% for item in specialties %}
+    <div class="item-container">
+        <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}" class="item-image">
+        <div>
+            {{ item.name }} - {{ item.price }} CHF
+            <a href="{{ url_for('add_to_cart', spec_id=item.id) }}">Add to cart</a>
+        </div>
+    </div>
+    {% endfor %}
+
+
+    <a href="{{ url_for('show_cart') }}" class="cart-link">View cart</a>
+
+</body>
+
+</html>
