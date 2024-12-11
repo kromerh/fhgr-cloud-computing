@@ -1,14 +1,14 @@
 # ----- Step 2 -------
 # Azure Resources
-export SUBSCRIPTION_ID=6795c425-c0c3-438c-b25f-6757acc7f034
+export SUBSCRIPTION_ID=...
 export RESOURCE_GROUP=rg-virtualisierung-webshop-hkr
 export LOCATION=switzerlandnorth
-export STORAGE_ACCOUNT_NAME=staccwebshopvl06hkr
+export STORAGE_ACCOUNT_NAME=staccwebshopvl06hkr100
 export QUEUE_NAME=queuehkr
-export KEY_VAULT_NAME=kv-webshop-hkr
+export KEY_VAULT_NAME=kv-webshop-hkr100
 
 # Azure Container Registry
-export ACR_NAME=acrwebshophkr
+export ACR_NAME=acrwebshophkr100
 export IMAGE=order_service:v1
 export API_NAME=order-service
 

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-    <h1>Graubünden Food Specialties</h1>
+    <h1>Graubünden Food Specialties - Green</h1>
     {% for item in specialties %}
     <div class="item-container">
         <img src="{{ url_for('static', filename='images/' + item.image) }}" alt="{{ item.name }}" class="item-image">
