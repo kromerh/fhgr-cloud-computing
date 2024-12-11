@@ -1,12 +1,12 @@
 # ----- Step 2 -------
 # Copy the values below from `order_service.sh` to `webshop.sh`:
 # Azure Resources
-export SUBSCRIPTION_ID=b641ad8e-de23-40d6-8662-ec920f7cb0b9
-export RESOURCE_GROUP=hkr-virtualisierung-webshop
+export SUBSCRIPTION_ID=...
+export RESOURCE_GROUP=rg-virtualisierung-webshop-hkr
 export LOCATION=switzerlandnorth
-export KEY_VAULT_NAME=hkr-kv-webshop-2
+export KEY_VAULT_NAME=kv-webshop-hkr100
 export ENVIRONMENT=webshop-env
-export ACR_NAME=hkracrwebshop
+export ACR_NAME=acrwebshophkr100
 
 # These values are different from `order_service.sh`
 export WEBSHOP_IMAGE=webshop:v1_green
@@ -66,13 +66,14 @@ az containerapp revision label add \
 --revision $WEBSHOP_API_NAME--green
 
 
+# ----- Step 4 -------
 # Switch to webshop_blue
 
 # These values are different from `order_service.sh`
 export WEBSHOP_IMAGE=webshop:v1_blue
 
-# ----- Step 3 -------
 # Run these four lines at the same time
+# When you run these lines, make sure that you are inside directory webshop_blue
 ACR_LOGIN_SERVER=$(az acr show --name $ACR_NAME --query loginServer --output tsv)
 ACR_USERNAME=$(az acr credential show --name $ACR_NAME --query username --output tsv)
 ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query "passwords[0].value" --output tsv)
