@@ -54,3 +54,33 @@ az containerapp update \
 --resource-group $RESOURCE_GROUP \
 --image $ACR_NAME.azurecr.io/$WEBSHOP_IMAGE
 
+# Azure Container App
+az containerapp create `
+--name $env:WEBSHOP_API_NAME `
+--resource-group $env:RESOURCE_GROUP `
+--environment $env:ENVIRONMENT `
+--image $env:ACR_NAME.azurecr.io/$env:WEBSHOP_IMAGE `
+--target-port 5000 `
+--ingress external `
+--registry-server $env:ACR_NAME.azurecr.io `
+--system-assigned `
+--min-replicas 0 `
+--max-replicas 1 `
+--query properties.configuration.ingress.fqdn
+
+$env:MI_PRINCIPAL_ID=$(az containerapp show `
+--resource-group $env:RESOURCE_GROUP `
+--name $env:WEBSHOP_API_NAME `
+--query identity.principalId `
+--out tsv)
+
+az role assignment create `
+--role "Key Vault Secrets User" `
+--assignee $env:MI_PRINCIPAL_ID `
+--scope /subscriptions/$env:SUBSCRIPTION_ID/resourceGroups/$env:RESOURCE_GROUP/providers/Microsoft.KeyVault/vaults/$env:KEY_VAULT_NAME
+
+# Update the container app - in case you made changes to the image
+az containerapp update `
+--name $env:WEBSHOP_API_NAME `
+--resource-group $env:RESOURCE_GROUP `
+--image $env:ACR_NAME.azurecr.io/$env:WEBSHOP_IMAGE
