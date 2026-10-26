@@ -1,11 +1,13 @@
 # Cloud Shell
 
-New-AzResourceGroup -Name "rg-hkr-vorlesung-04-1" -Location "West Europe"
+New-AzResourceGroup -Name "rg-vl09-<initialen>" -Location "switzerlandnorth"
 
-New-AzStorageAccount -ResourceGroupName "rg-hkr-vorlesung-04" -Name "stacchkrvl04666" -Location "East US" -SkuName Standard_LRS
+New-AzStorageAccount -ResourceGroupName "rg-vl09-<initialen>" -Name "stacvl09<initialen><zahl>" -Location "switzerlandnorth" -SkuName Standard_LRS
 
 # Azure CLI
 
-az group create --name rg-hkr-vorlesung-04-cli-2 --location eastus
+az login
 
-az storage account create --name stacchkrvl04cli22 --resource-group rg-hkr-vorlesung-04-cli-2 --location eastus --sku Standard_LRS
+az group create --name rg-vl09-<initialen>-cli --location switzerlandnorth
+
+az storage account create --name stacvl09cli<initialen><zahl> --resource-group rg-vl09-<initialen>-cli --location switzerlandnorth --sku Standard_LRS
