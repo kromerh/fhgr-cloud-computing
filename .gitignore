@@ -37,3 +37,6 @@ terraform.rc
 
 # macOS
 .DS_Store
+
+# SSH-Schlüssel (z. B. aus dem Azure Portal)
+*.pem
