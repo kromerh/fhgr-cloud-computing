@@ -1,18 +1,42 @@
-provider "azurerm" {  
-  features {}  
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 5.11"
+    }
+  }
 }
 
-module "primary" {  
-  source = "./modules/tg/stac-cont"  
-  name   = "primary"  
-}  
+provider "azurerm" {
+  features {}
+  resource_providers_to_register = [
+    "Microsoft.Compute", "Microsoft.Network", "Microsoft.Storage"
+  ]
+}
 
-module "secondary" {  
-  source = "./modules/tg/stac-cont"  
-  name   = "secondary"  
-}  
+module "primary" {
+  source = "./rg-stac-cont"
 
-module "tertiary" {  
-  source = "./modules/tg/stac-cont"  
-  name   = "tertiary"  
-}  
+  name        = "primary"
+  initialen   = var.initialen
+  location    = var.location
+  common_tags = var.common_tags
+}
+
+module "secondary" {
+  source = "./rg-stac-cont"
+
+  name        = "secondary"
+  initialen   = var.initialen
+  location    = var.location
+  common_tags = var.common_tags
+}
+
+module "tertiary" {
+  source = "./rg-stac-cont"
+
+  name        = "tertiary"
+  initialen   = var.initialen
+  location    = var.location
+  common_tags = var.common_tags
+}
