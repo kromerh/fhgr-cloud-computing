@@ -1,0 +1,43 @@
+name: "Terraform GitHub Actions"
+on:
+  pull_request:
+    types: [opened, synchronize, closed]
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.ARM_CLIENT_ID}}
+          client-secret: ${{ env.ARM_CLIENT_SECRET}}
+          tenant-id: ${{ env.ARM_TENANT_ID }}
+          subscription-id: ${{ env.ARM_SUBSCRIPTION_ID }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -backend-config=backend.conf -upgrade
+        working_directory:
+
+      - name: Terraform Plan
+        if: (github.event.pull_request.state == 'open' || github.event.pull_request.state == 'closed' || github.event.pull_request.state == 'synchronize') && github.event.pull_request.base.ref == 'main'
+        run: terraform plan
+        working_directory:
+
+      - name: Terraform Apply
+        if: github.event.pull_request.state == 'closed' && github.event.pull_request.base.ref == 'main'
+        run: terraform apply -auto-approve
+        working_directory:
+```

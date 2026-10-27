@@ -1,0 +1,13 @@
+# Cloud Shell
+
+New-AzResourceGroup -Name "rg-vl09-<initialen>" -Location "switzerlandnorth"
+
+New-AzStorageAccount -ResourceGroupName "rg-vl09-<initialen>" -Name "stacvl09<initialen><zahl>" -Location "switzerlandnorth" -SkuName Standard_LRS
+
+# Azure CLI
+
+az login
+
+az group create --name rg-vl09-<initialen>-cli --location switzerlandnorth
+
+az storage account create --name stacvl09cli<initialen><zahl> --resource-group rg-vl09-<initialen>-cli --location switzerlandnorth --sku Standard_LRS
