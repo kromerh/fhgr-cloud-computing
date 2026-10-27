@@ -12,8 +12,8 @@ variable "initialen" {
 
 variable "location" {
   type        = string
-  description = "Azure-Region. Azure for Students erlaubt nur bestimmte Regionen (Portal: Policy > Assignments > Allowed resource deployment regions)."
-  default     = "switzerlandnorth"
+  description = "Azure-Region. Azure for Students erlaubt nur bestimmte Regionen (Portal: Policy > Assignments > Allowed resource deployment regions). austriaeast, weil Standard_B2ats_v2 bei Azure for Students in switzerlandnorth nicht verfügbar ist."
+  default     = "austriaeast"
 }
 
 variable "common_tags" {
