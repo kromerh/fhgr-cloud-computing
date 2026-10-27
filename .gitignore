@@ -34,3 +34,6 @@ override.tf.json
 terraform.rc
 
 .venv
+
+# SSH-Schlüssel (z. B. aus dem Azure Portal)
+*.pem

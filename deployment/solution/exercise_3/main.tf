@@ -61,7 +61,6 @@ resource "azurerm_linux_virtual_machine" "vm_primary" {
     azurerm_network_interface.nic_primary.id,
   ]
   admin_username                  = "adminuser"
-  admin_password                  = "***REMOVED***"
   disable_password_authentication = false
 
   os_disk {

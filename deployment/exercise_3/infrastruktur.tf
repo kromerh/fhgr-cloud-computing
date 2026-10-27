@@ -58,7 +58,6 @@ network_interface_ids = [
     azurerm_network_interface.nic_primary.id,
   ]
   admin_username      = "adminuser"  
-  admin_password      = "***REMOVED***"  
   disable_password_authentication = false  
   
   os_disk {  
