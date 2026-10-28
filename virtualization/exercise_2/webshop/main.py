@@ -1,7 +1,12 @@
+import os
+import secrets
+
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
-app.secret_key = "a4d2a7a679c84dd792a5f5d6dd7a5792"
+# The cart lives in the session, which is signed with this key. Set FLASK_SECRET_KEY to keep the
+# cart across restarts; without it, a random key is used and the cart is empty after a restart.
+app.secret_key = os.environ.get("FLASK_SECRET_KEY") or secrets.token_hex(32)
 
 specialties = [
     {"id": 1, "name": "Bündner Nusstorte", "price": 20.00, "image": "image1.png"},

@@ -3,14 +3,19 @@ import requests
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 import logging
+import os
+import secrets
 
-KEY_VAULT_NAME = 'kv-webshop-hkr100'
-ORDER_SERVICE_FQDN =  'http://order-service'
+# Configuration comes from the environment (az containerapp create --env-vars ...)
+KEY_VAULT_NAME = os.environ['KEY_VAULT_NAME']
+ORDER_SERVICE_FQDN = os.environ['ORDER_SERVICE_FQDN']
 
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
-app.secret_key = 'a4d2a7a679c84dd792a5f5d6dd7a5792'
+# The cart lives in the session, which is signed with this key. In Azure it is a Container App
+# secret, so the cart survives a scale-to-zero cold start. The random fallback is for local runs only.
+app.secret_key = os.environ.get('FLASK_SECRET_KEY') or secrets.token_hex(32)
 
 key_vault_name = KEY_VAULT_NAME
 key_vault_uri = f"https://{key_vault_name}.vault.azure.net"

@@ -1,12 +1,29 @@
-# Configure the Azure provider
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 5.11"
+    }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.7"
+    }
+  }
+}
+
+# Subscription kommt aus ARM_SUBSCRIPTION_ID (export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv))
 provider "azurerm" {
   features {}
+  resource_providers_to_register = [
+    "Microsoft.Compute", "Microsoft.Network", "Microsoft.Storage"
+  ]
 }
 
 # Create a resource group where all resources will be created
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-flaskapp"
-  location = "West Europe"
+  name     = "rg-flaskapp-${var.initialen}"
+  location = var.location
+  tags     = var.common_tags
 }
 
 # Create a virtual network for the VM to connect to
@@ -15,6 +32,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   address_space       = ["10.0.0.0/16"]
+  tags                = var.common_tags
 }
 
 # Create a subnet within the virtual network
@@ -25,12 +43,15 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-# Create a public IP to be assigned to the VM
+# Create a public IP to be assigned to the VM. A Standard public IP is closed by default:
+# only the NSG rules below open it.
 resource "azurerm_public_ip" "public_ip" {
-  name                = "pub-ip-flaskapp"
+  name                = "pip-flaskapp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
+  sku                 = "Standard"
+  allocation_method   = "Static"
+  tags                = var.common_tags
 }
 
 # Create a network interface for the VM
@@ -38,6 +59,7 @@ resource "azurerm_network_interface" "nic" {
   name                = "nic-flaskapp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  tags                = var.common_tags
 
   ip_configuration {
     name                          = "internal"
@@ -52,6 +74,7 @@ resource "azurerm_network_security_group" "nsg" {
   name                = "nsg-flaskapp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
+  tags                = var.common_tags
 
   # Define a rule to allow SSH access
   security_rule {
@@ -66,7 +89,7 @@ resource "azurerm_network_security_group" "nsg" {
     destination_address_prefix = "*"
   }
 
-  # Define a rule to allow traffic to port 5050 for the flask app
+  # Define a rule to allow traffic to port 5000 for the flask app
   security_rule {
     name                       = "FlaskApp"
     priority                   = 1002
@@ -88,17 +111,18 @@ resource "azurerm_subnet_network_security_group_association" "nsg_association" {
 
 # Create the Linux virtual machine
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                  = "vm-flaskapp"
-  resource_group_name   = azurerm_resource_group.rg.name
-  location              = azurerm_resource_group.rg.location
-  size                  = "Standard_B1s"
-  network_interface_ids = [azurerm_network_interface.nic.id]
-  admin_username        = "azureuser"
+  name                            = "vm-flaskapp"
+  resource_group_name             = azurerm_resource_group.rg.name
+  location                        = azurerm_resource_group.rg.location
+  size                            = "Standard_B2ats_v2"
+  network_interface_ids           = [azurerm_network_interface.nic.id]
+  admin_username                  = "azureuser"
+  disable_password_authentication = true
+  tags                            = var.common_tags
 
-  # Configure SSH key for the admin user. Replace the path with the path to your public key
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key = file(var.ssh_public_key_path)
   }
 
   os_disk {
@@ -108,9 +132,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   source_image_reference {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20_04-lts"
+    offer     = "ubuntu-24_04-lts"
+    sku       = "server"
     version   = "latest"
   }
 }
-

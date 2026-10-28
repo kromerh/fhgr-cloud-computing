@@ -3,11 +3,13 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from azure.storage.queue import QueueServiceClient
 import logging
+import os
 import sys
 
-KET_VAULT_NAME = "kv-webshop-hkr100"
-STORAGE_ACCOUNT_NAME = "staccwebshopvl06hkr100"
-QUEUE_NAME = "queuehkr"
+# Configuration comes from the environment (az containerapp create --env-vars ...)
+KEY_VAULT_NAME = os.environ["KEY_VAULT_NAME"]
+STORAGE_ACCOUNT_NAME = os.environ["STORAGE_ACCOUNT_NAME"]
+QUEUE_NAME = os.environ["QUEUE_NAME"]
 
 logger = logging.getLogger("order_service")
 logger.setLevel(logging.DEBUG)
@@ -22,7 +24,7 @@ logger.addHandler(handler)
 
 app = Flask(__name__)
 
-key_vault_name = KET_VAULT_NAME
+key_vault_name = KEY_VAULT_NAME
 key_vault_uri = f"https://{key_vault_name}.vault.azure.net"
 logger.info(f"Accessed Key Vault URI: {key_vault_uri}")
 
